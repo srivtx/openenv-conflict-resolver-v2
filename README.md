@@ -14,6 +14,14 @@ pinned: false
 
 *OpenEnv Hackathon 2026 | Team Agent (1)*
 
+## links (for judges)
+
+- **live HF Space** (runnable env): [huggingface.co/spaces/srivtx/openenv-conflict-resolver-v2](https://huggingface.co/spaces/srivtx/openenv-conflict-resolver-v2)
+- **demo video (story, ~2 min)**: [youtube.com/watch?v=3jPYWWhIKNs](https://www.youtube.com/watch?v=3jPYWWhIKNs)
+- **mini-blog (writeup)**: [`blog.md`](blog.md)
+- **training notebook (Colab T4)**: [`notebooks/train_grpo_colab.ipynb`](notebooks/train_grpo_colab.ipynb)
+- **source / GitHub**: [github.com/srivtx/openenv-conflict-resolver-v2](https://github.com/srivtx/openenv-conflict-resolver-v2)
+
 ---
 
 ## what the environment does
@@ -134,6 +142,8 @@ every episode is deterministic from its seed, so the split is reproducible from 
 
 honest numbers from a Colab T4 run on procedural episodes generated at eval time (the model has never seen these seeds during training):
 
+![holdout + adversarial scores by training stage](docs/assets/results.png)
+
 | pool                | untrained 3B | after SFT | after SFT + GRPO |
 |---------------------|--------------|-----------|------------------|
 | holdout (n=40)      | **0.5454**   | **0.9877**| **0.9876**       |
@@ -162,7 +172,7 @@ message-score probe:
 
 deterministic, regex-strict, no substring shortcuts.
 
-to reproduce: open the Colab notebook, set runtime to T4, run all cells. the notebook prints holdout averages, the adversarial pool number, and these grader probes at the end.
+to reproduce: open the Colab notebook, set runtime to T4, run all cells. the notebook prints holdout averages, the adversarial pool number, and these grader probes at the end. the final three cells render `assets/sft_loss.png`, `assets/grpo_reward_loss.png`, and `assets/score_comparison.png` directly from `sft_trainer.state.log_history` / `grpo_trainer.state.log_history`, so a fresh run produces the same evidence chart shown above.
 
 ---
 
@@ -247,7 +257,7 @@ round2/
 │           └── conflict_cases.json     <- static demo tasks (UI only, not training)
 ├── notebooks/
 │   └── train_grpo_colab.ipynb          <- procedural SFT + GRPO + holdout eval
-├── docs/                               <- 9-chapter walkthrough
+├── docs/                               <- internal notes (not part of submission)
 └── tests/
     ├── test_environment.py
     ├── test_graders.py

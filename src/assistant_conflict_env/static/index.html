@@ -72,16 +72,22 @@
       pointer-events: none;
     }
 
-    .landing-video {
+    .landing--no-hero-video {
+      background: radial-gradient(circle at 50% 40%, #1a1a1a 0%, var(--bg) 60%);
+    }
+
+    /* 16:9 YouTube covers the viewport (letterbox or crop) */
+    .landing-yt-iframe {
       position: absolute;
-      left: 50%;
       top: 50%;
-      min-width: 100%;
-      min-height: 100%;
-      width: auto;
-      height: auto;
+      left: 50%;
+      width: 100vw;
+      height: 56.25vw;
+      min-width: 177.78vh;
+      min-height: 100vh;
       transform: translate(-50%, -50%);
-      object-fit: cover;
+      border: 0;
+      pointer-events: none;
     }
 
     .landing-scrim {
@@ -89,8 +95,8 @@
       inset: 0;
       z-index: 1;
       background:
-        radial-gradient(circle at 50% 40%, rgba(26, 26, 26, 0.86) 0%, rgba(10, 10, 10, 0.94) 60%),
-        linear-gradient(180deg, rgba(10, 10, 10, 0.72) 0%, rgba(10, 10, 10, 0.9) 100%);
+        radial-gradient(ellipse at 50% 50%, rgba(10, 10, 10, 0) 0%, rgba(10, 10, 10, 0.35) 55%, rgba(10, 10, 10, 0.78) 100%),
+        linear-gradient(180deg, rgba(10, 10, 10, 0.55) 0%, rgba(10, 10, 10, 0) 28%, rgba(10, 10, 10, 0) 72%, rgba(10, 10, 10, 0.7) 100%);
       pointer-events: none;
     }
 
@@ -98,13 +104,121 @@
       position: relative;
       z-index: 2;
       text-align: center;
-      max-width: 600px;
+      max-width: 560px;
       padding: 40px;
+    }
+
+    .hero-sound-toggle {
+      position: absolute;
+      top: 22px;
+      right: 22px;
+      z-index: 3;
+      width: 42px;
+      height: 42px;
+      border-radius: 50%;
+      border: 1px solid rgba(255, 255, 255, 0.28);
+      background: rgba(0, 0, 0, 0.45);
+      color: #fff;
+      cursor: pointer;
+      display: none;
+      align-items: center;
+      justify-content: center;
+      padding: 0;
+      backdrop-filter: blur(8px);
+      -webkit-backdrop-filter: blur(8px);
+      transition: background 0.2s ease, border-color 0.2s ease, transform 0.2s ease;
+    }
+
+    .hero-sound-toggle.is-ready {
+      display: inline-flex;
+    }
+
+    .hero-sound-toggle:hover {
+      background: rgba(0, 0, 0, 0.72);
+      border-color: rgba(255, 255, 255, 0.55);
+      transform: scale(1.05);
+    }
+
+    .hero-sound-toggle svg {
+      pointer-events: none;
+    }
+
+    .hero-sound-hint {
+      position: absolute;
+      top: 30px;
+      right: 76px;
+      z-index: 3;
+      display: none;
+      align-items: center;
+      gap: 9px;
+      padding: 7px 14px 7px 12px;
+      background: rgba(0, 0, 0, 0.5);
+      color: rgba(255, 255, 255, 0.96);
+      font-size: 12px;
+      font-weight: 500;
+      letter-spacing: 0.2px;
+      border: 1px solid rgba(255, 255, 255, 0.22);
+      border-radius: 999px;
+      backdrop-filter: blur(10px);
+      -webkit-backdrop-filter: blur(10px);
+      white-space: nowrap;
+      pointer-events: none;
+      opacity: 0;
+      transform: translateX(6px);
+      transition: opacity 0.45s ease, transform 0.45s ease;
+    }
+
+    .hero-sound-hint.is-visible {
+      display: inline-flex;
+      opacity: 1;
+      transform: translateX(0);
+    }
+
+    .hero-sound-hint.is-fading {
+      opacity: 0;
+      transform: translateX(6px);
+    }
+
+    .hero-sound-hint::after {
+      content: '';
+      position: absolute;
+      top: 50%;
+      right: -6px;
+      width: 0;
+      height: 0;
+      border-top: 6px solid transparent;
+      border-bottom: 6px solid transparent;
+      border-left: 7px solid rgba(0, 0, 0, 0.5);
+      transform: translateY(-50%);
+    }
+
+    .hero-sound-hint__dot {
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      background: #36b37e;
+      box-shadow: 0 0 0 0 rgba(54, 179, 126, 0.6);
+      animation: heroSoundDot 1.6s ease-in-out infinite;
+      flex-shrink: 0;
+    }
+
+    @keyframes heroSoundDot {
+
+      0%,
+      100% {
+        box-shadow: 0 0 0 0 rgba(54, 179, 126, 0.55);
+        transform: scale(1);
+      }
+
+      50% {
+        box-shadow: 0 0 0 8px rgba(54, 179, 126, 0);
+        transform: scale(1.18);
+      }
     }
 
     @media (prefers-reduced-motion: reduce) {
       .landing-video-wrap {
-        display: none;
+        display: none !important;
       }
 
       .landing {
@@ -115,16 +229,18 @@
     .landing-title {
       font-size: 32px;
       font-weight: 500;
-      margin-bottom: 16px;
+      margin-bottom: 14px;
       color: #fff;
       letter-spacing: -0.5px;
+      text-shadow: 0 2px 18px rgba(0, 0, 0, 0.85), 0 1px 4px rgba(0, 0, 0, 0.9);
     }
 
     .landing-desc {
       font-size: 14px;
-      line-height: 1.6;
-      color: var(--text-secondary);
-      margin-bottom: 40px;
+      line-height: 1.55;
+      color: rgba(255, 255, 255, 0.88);
+      margin-bottom: 32px;
+      text-shadow: 0 1px 10px rgba(0, 0, 0, 0.85);
     }
 
     /* Isometric Stack (Logo Match) */
@@ -856,12 +972,28 @@
 
   <!-- LANDING PAGE -->
   <div id="landing-page" class="landing">
-    <div class="landing-video-wrap" aria-hidden="true">
-      <video id="landing-hero-video" class="landing-video" autoplay muted loop playsinline preload="metadata">
-        <source id="landing-hero-source" src="/static/video2.mp4" type="video/mp4" />
-      </video>
-    </div>
+    <!-- YouTube embed injected by script (see HERO_YOUTUBE below) — no large MP4 in the repo / HF 10MB limit -->
+    <div class="landing-video-wrap" id="landing-hero-bg" aria-hidden="true"></div>
     <div class="landing-scrim" aria-hidden="true"></div>
+    <button id="hero-sound-toggle" class="hero-sound-toggle" type="button" aria-label="Unmute video"
+      aria-pressed="false" title="Unmute">
+      <svg id="hero-sound-icon-muted" viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor"
+        stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+        <polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"></polygon>
+        <line x1="23" y1="9" x2="17" y2="15"></line>
+        <line x1="17" y1="9" x2="23" y2="15"></line>
+      </svg>
+      <svg id="hero-sound-icon-on" viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor"
+        stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="display:none">
+        <polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"></polygon>
+        <path d="M19.07 4.93a10 10 0 0 1 0 14.14"></path>
+        <path d="M15.54 8.46a5 5 0 0 1 0 7.07"></path>
+      </svg>
+    </button>
+    <div id="hero-sound-hint" class="hero-sound-hint" aria-hidden="true">
+      <span class="hero-sound-hint__dot"></span>
+      <span>Sound off — click to listen</span>
+    </div>
     <div class="landing-content">
       <div class="stack-container">
         <div class="stack">
@@ -872,8 +1004,7 @@
       </div>
       <div class="landing-title">Conflict Analytics Engine</div>
       <div class="landing-desc">
-        An OpenEnv Reinforcement Learning Environment designed to train AI agents in long-horizon, cascading schedule
-        resolution. Test the SFT + GRPO pipeline against live scenarios.
+        OpenEnv RL for long-horizon planning. Cascading conflicts, real world state, live procedural episodes.
       </div>
       <button class="btn btn-primary" style="margin: 0 auto; padding: 12px 24px; font-size: 14px;"
         onclick="enterApp()">Launch Environment</button>
@@ -881,11 +1012,115 @@
   </div>
   <script>
     (function () {
-      var v = document.getElementById('landing-hero-video');
-      var s = document.getElementById('landing-hero-source');
-      if (v && s && location.pathname.indexOf('/web') === 0) {
-        s.src = '/web/static/video2.mp4';
-        v.load();
+      // Full https://www.youtube.com/watch?v=... or youtu.be/... URL, or the 11-char id.
+      // Unlisted-but-public works. Keep this in sync with the HF Space mirror.
+      var HERO_YOUTUBE = 'https://www.youtube.com/watch?v=3jPYWWhIKNs';
+
+      function parseYouTubeId(s) {
+        if (!s || typeof s !== 'string') return '';
+        s = s.trim();
+        if (/^[\w-]{11}$/.test(s)) return s;
+        var m = s.match(/(?:youtube\.com\/(?:watch\?v=|embed\/)|youtu\.be\/)([\w-]{11})/);
+        return m ? m[1] : '';
+      }
+
+      var wrap = document.getElementById('landing-hero-bg');
+      var landing = document.getElementById('landing-page');
+      var soundBtn = document.getElementById('hero-sound-toggle');
+      var iconMuted = document.getElementById('hero-sound-icon-muted');
+      var iconOn = document.getElementById('hero-sound-icon-on');
+      var soundHint = document.getElementById('hero-sound-hint');
+      if (!wrap || !landing) return;
+
+      if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+        landing.classList.add('landing--no-hero-video');
+        wrap.style.display = 'none';
+        return;
+      }
+
+      var id = parseYouTubeId(HERO_YOUTUBE);
+      if (!id) {
+        landing.classList.add('landing--no-hero-video');
+        wrap.style.display = 'none';
+        return;
+      }
+
+      var origin = encodeURIComponent(window.location.origin);
+      var q = [
+        'autoplay=1',
+        'mute=1',
+        'playsinline=1',
+        'controls=0',
+        'modestbranding=1',
+        'rel=0',
+        'loop=1',
+        'playlist=' + encodeURIComponent(id),
+        'enablejsapi=1',
+        'origin=' + origin
+      ].join('&');
+      var src = 'https://www.youtube-nocookie.com/embed/' + id + '?' + q;
+      var iframe = document.createElement('iframe');
+      iframe.id = 'landing-hero-iframe';
+      iframe.className = 'landing-yt-iframe';
+      iframe.setAttribute('title', 'Project demo video');
+      iframe.setAttribute('allow', 'autoplay; encrypted-media; picture-in-picture; fullscreen');
+      iframe.setAttribute('allowfullscreen', '');
+      iframe.setAttribute('loading', 'eager');
+      iframe.setAttribute('referrerpolicy', 'strict-origin-when-cross-origin');
+      iframe.setAttribute('src', src);
+      // YouTube's player flashes its center play/pause/skip chrome for a
+      // beat when it transitions from buffering to playing, even with
+      // controls=0. Hide the iframe behind a short fade so the user only
+      // ever sees clean video frames, not the startup chrome.
+      iframe.style.opacity = '0';
+      iframe.style.transition = 'opacity 0.6s ease';
+      wrap.appendChild(iframe);
+
+      function dismissSoundHint() {
+        if (!soundHint || !soundHint.classList.contains('is-visible')) return;
+        soundHint.classList.add('is-fading');
+        setTimeout(function () {
+          soundHint.classList.remove('is-visible', 'is-fading');
+        }, 500);
+      }
+
+      iframe.addEventListener('load', function () {
+        setTimeout(function () {
+          iframe.style.opacity = '1';
+          if (soundBtn) soundBtn.classList.add('is-ready');
+          if (soundHint) {
+            soundHint.classList.add('is-visible');
+            // Auto-dismiss the nudge after a few seconds so it never overstays.
+            setTimeout(dismissSoundHint, 6500);
+          }
+        }, 1700);
+      });
+
+      // Mute / unmute toggle. The iframe ignores postMessage commands until
+      // it has finished loading, so we only reveal the button after the
+      // fade-in (above) has run.
+      if (soundBtn && iconMuted && iconOn) {
+        var muted = true;
+        function ytCommand(func) {
+          if (!iframe.contentWindow) return;
+          try {
+            iframe.contentWindow.postMessage(
+              JSON.stringify({ event: 'command', func: func, args: [] }),
+              '*'
+            );
+          } catch (e) { /* ignore */ }
+        }
+        soundBtn.addEventListener('click', function () {
+          muted = !muted;
+          ytCommand(muted ? 'mute' : 'unMute');
+          if (!muted) ytCommand('playVideo');
+          iconMuted.style.display = muted ? '' : 'none';
+          iconOn.style.display = muted ? 'none' : '';
+          soundBtn.setAttribute('aria-pressed', String(!muted));
+          soundBtn.setAttribute('aria-label', muted ? 'Unmute video' : 'Mute video');
+          soundBtn.setAttribute('title', muted ? 'Unmute' : 'Mute');
+          dismissSoundHint();
+        });
       }
     })();
   </script>
@@ -1401,8 +1636,8 @@
     function enterApp() {
       const landing = document.getElementById('landing-page');
       const app = document.getElementById('app');
-      const hero = document.getElementById('landing-hero-video');
-      if (hero) hero.pause();
+      const heroBg = document.getElementById('landing-hero-bg');
+      if (heroBg) heroBg.innerHTML = '';
       landing.style.opacity = '0';
       landing.style.transform = 'scale(0.95)';
       setTimeout(() => {

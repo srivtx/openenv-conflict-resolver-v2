@@ -1,4 +1,5 @@
 .venv/
+.venv-*/
 __pycache__/
 .pytest_cache/
 *.pyc
@@ -6,3 +7,15 @@ __pycache__/
 .env.*
 .DS_Store
 outputs/
+
+# Local hero / demo exports only — landing uses YouTube embed (static/index.html HERO_YOUTUBE)
+src/assistant_conflict_env/static/video*.mp4
+
+# Internal-only docs (handoff, production brief w/ scenario spoilers, internal
+# strategy notes, prior-version meta-narrative). Not meant for the public
+# GitHub repo. Public copy lives in README.md / blog.md / docs/.
+context2.md
+videocontext.md
+hackathon_checklist.md
+reward_strategy.md
+doc.md
