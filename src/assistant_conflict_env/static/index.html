@@ -1068,12 +1068,12 @@
       iframe.setAttribute('loading', 'eager');
       iframe.setAttribute('referrerpolicy', 'strict-origin-when-cross-origin');
       iframe.setAttribute('src', src);
-      // YouTube's player flashes its center play/pause/skip chrome for a
-      // beat when it transitions from buffering to playing, even with
-      // controls=0. Hide the iframe behind a short fade so the user only
-      // ever sees clean video frames, not the startup chrome.
+      // YouTube briefly shows its center play/pause chrome on startup
+      // even with controls=0. We keep a tiny opacity fade so the very
+      // first frame isn't a static play overlay; we deliberately keep
+      // it short so the page never feels laggy.
       iframe.style.opacity = '0';
-      iframe.style.transition = 'opacity 0.6s ease';
+      iframe.style.transition = 'opacity 0.35s ease';
       wrap.appendChild(iframe);
 
       function dismissSoundHint() {
@@ -1093,7 +1093,7 @@
             // Auto-dismiss the nudge after a few seconds so it never overstays.
             setTimeout(dismissSoundHint, 6500);
           }
-        }, 1700);
+        }, 350);
       });
 
       // Mute / unmute toggle. The iframe ignores postMessage commands until
